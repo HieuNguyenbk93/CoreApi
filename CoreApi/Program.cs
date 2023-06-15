@@ -1,7 +1,9 @@
 using CoreApi.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CoreApi.Helpers;
+using CoreApi.Repositories.UserRepo;
+using CoreApi.Repositories.AuthRepo;
+using CoreApi.Entities.InitializationDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = false;
@@ -33,6 +35,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 });
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -45,7 +50,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseAuthorization();
+
+// Initialize the default user
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await MyDbContextInitializer.Initialize(services);
+}
 
 app.MapControllers();
 
-app.Run();
+//app.Run();
+await app.RunAsync();

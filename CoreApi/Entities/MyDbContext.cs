@@ -20,19 +20,7 @@ namespace CoreApi.Entities
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<PageMenu>(e =>
-            {
-                e.ToTable("PageMenu");
-                e.HasKey(x => x.Id);
-                e.Property(x => x.Title).IsRequired().HasMaxLength(256);
-                e.Property(x => x.Link).IsRequired().HasMaxLength(512);
-                e.Property(x => x.NumIndex).IsRequired();
-                e.Property(x => x.Level).IsRequired();
-                e.Property(x => x.ParentId).IsRequired();
-                e.Property(x => x.IsVisible).IsRequired();
-                e.HasIndex(x => x.Title).IsUnique();
-            });
-
+            modelBuilder.ApplyConfiguration(new PageMenuConfiguration());
             modelBuilder.ApplyConfiguration(new RolePageConfiguration());
         }
     }
