@@ -31,11 +31,13 @@ namespace CoreApi.Entities.InitializationDatabase
             adminUser.FullName = "Admin";
             adminUser.UserName = "admin";
             adminUser.Email = "admin@example.com";
+            adminUser.IsVisible = true;
             await userManager.CreateAsync(adminUser, "123456");
             var userUser = new ApplicationUser();
             userUser.FullName = "End user";
             userUser.UserName = "user";
             userUser.Email = "user@example.com";
+            userUser.IsVisible = true;
             await userManager.CreateAsync(userUser, "123456");
 
             // Assign the default user to the default role

@@ -2,6 +2,7 @@
 using CoreApi.Repositories.AuthRepo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CoreApi.Controllers
 {
@@ -18,7 +19,7 @@ namespace CoreApi.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> SignUp(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             var result = await authRepository.Register(registerDto);
 
@@ -30,6 +31,30 @@ namespace CoreApi.Controllers
                 return Ok(new { token = result.Data });
 
             return BadRequest(result.Errors);
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromForm]LoginDto loginDto)
+        {
+            var result = await authRepository.Login(loginDto);
+            if (!result.IsModelValid)
+            {
+                return BadRequest();
+            }
+            if (result.Succeeded)
+            {
+                var token = new { token = result.Data };
+                return Ok(token);
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpGet, Authorize]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "Hieu", "Nguyen" };
         }
     }
 }

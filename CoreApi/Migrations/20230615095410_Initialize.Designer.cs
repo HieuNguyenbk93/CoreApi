@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreApi.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230615073640_Initialize")]
+    [Migration("20230615095410_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -47,6 +47,9 @@ namespace CoreApi.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
