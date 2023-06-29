@@ -51,6 +51,24 @@ namespace CoreApi.Controllers
             return BadRequest(result.Errors);
         }
 
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken([FromForm] TokenRefreshDto token)
+        {
+            var result = await authRepository.Refresh(token);
+            if (!result.IsModelValid)
+            {
+                return BadRequest();
+            }
+            if (result.Succeeded)
+            {
+                var newtoken = new { token = result.Data };
+                return Ok(newtoken);
+            }
+
+            return BadRequest(result.Errors);
+        }
+
         [HttpGet, Authorize]
         public IEnumerable<string> Get()
         {

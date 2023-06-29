@@ -8,5 +8,6 @@ namespace CoreApi.Repositories.AuthRepo
     {
         Task<AuthResult<TokenDto>> Register(RegisterDto registerDto);
         Task<AuthResult<TokenDto>> Login(LoginDto loginDto);
+        Task<AuthResult<TokenDto>> Refresh(TokenRefreshDto token);
     }
 }

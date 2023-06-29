@@ -6,5 +6,7 @@ namespace CoreApi.Entities
     {
         public string FullName { get; set; }
         public bool IsVisible { get; set; }
+        public string? RefreshToken { get; set; }
+        public string? ResetPasswordToken { get; set; }
     }
 }
